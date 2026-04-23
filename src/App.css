@@ -1,0 +1,286 @@
+/* Hero gradient background */
+.hero-gradient {
+    background: linear-gradient(135deg, 
+        hsl(243 75% 97%) 0%, 
+        hsl(0 0% 100%) 50%, 
+        hsl(150 100% 97%) 100%
+    );
+}
+
+/* Glass effect */
+.glass {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+/* Card shadow */
+.card-shadow {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.card-shadow:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.dark .card-shadow {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dark .card-shadow:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Tone selector styles */
+.tone-btn {
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.tone-btn.active-friendly {
+    background: hsl(150 100% 95%);
+    color: hsl(150 100% 25%);
+    box-shadow: 0 1px 3px rgba(0, 200, 83, 0.2);
+}
+
+.dark .tone-btn.active-friendly {
+    background: hsl(150 100% 15%);
+    color: hsl(150 100% 70%);
+}
+
+.tone-btn.active-professional {
+    background: hsl(243 75% 95%);
+    color: hsl(243 75% 40%);
+    box-shadow: 0 1px 3px rgba(99, 102, 241, 0.2);
+}
+
+.dark .tone-btn.active-professional {
+    background: hsl(243 75% 15%);
+    color: hsl(243 75% 70%);
+}
+
+.tone-btn.active-sales {
+    background: hsl(340 85% 95%);
+    color: hsl(340 85% 40%);
+    box-shadow: 0 1px 3px rgba(236, 72, 153, 0.2);
+}
+
+.dark .tone-btn.active-sales {
+    background: hsl(340 85% 15%);
+    color: hsl(340 85% 70%);
+}
+
+/* Response card animation */
+.response-card {
+    animation: slide-up 0.4s ease-out;
+}
+
+/* Message input focus */
+.message-input:focus-within {
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+}
+
+/* History item hover */
+.history-item {
+    transition: background-color 0.15s, border-color 0.15s;
+}
+
+.history-item:hover {
+    background: hsl(var(--muted) / 0.5);
+    border-color: hsl(var(--border) / 0.5);
+}
+
+/* Button press effect */
+.btn-press:active {
+    transform: scale(0.98);
+}
+
+/* Loading pulse */
+.loading-pulse {
+    animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Responsive layout */
+@media (max-width: 1024px) {
+    .dashboard-layout {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        max-height: 40vh;
+    }
+    
+    .main-content {
+        width: 100%;
+    }
+}
+
+/* Profile selector dropdown */
+.profile-selector {
+    min-width: 200px;
+}
+
+@media (max-width: 640px) {
+    .profile-selector {
+        min-width: 0;
+        width: 100%;
+    }
+}
+
+/* Conversation list */
+.conversation-item {
+    transition: background-color 0.15s;
+}
+
+.conversation-item:hover {
+    background: hsl(var(--muted) / 0.5);
+}
+
+.conversation-item.active {
+    background: hsl(var(--primary) / 0.1);
+    border-color: hsl(var(--primary) / 0.3);
+}
+
+/* Chat bubbles */
+.chat-history-container {
+    background: repeating-linear-gradient(
+        180deg,
+        transparent 0px,
+        hsl(var(--muted) / 0.08) 1px,
+        transparent 2px,
+        transparent 32px
+    );
+}
+
+.dark .chat-history-container {
+    background: repeating-linear-gradient(
+        180deg,
+        transparent 0px,
+        hsl(var(--muted) / 0.04) 1px,
+        transparent 2px,
+        transparent 32px
+    );
+}
+
+.chat-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+}
+
+.chat-scroll::-webkit-scrollbar {
+    width: 5px;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 10px;
+}
+
+.chat-bubble {
+    max-width: 78%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    position: relative;
+    animation: bubble-in 0.25s ease-out;
+}
+
+@media (max-width: 640px) {
+    .chat-bubble {
+        max-width: 88%;
+    }
+}
+
+@keyframes bubble-in {
+    from { opacity: 0; transform: translateY(6px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.chat-bubble-customer {
+    background: hsl(var(--muted));
+    border-bottom-right-radius: 4px;
+    color: hsl(var(--foreground));
+}
+
+.chat-bubble-ai {
+    border-bottom-left-radius: 4px;
+}
+
+.chat-bubble-friendly {
+    background: hsl(150 45% 94%);
+    border: 1px solid hsl(150 40% 88%);
+}
+.dark .chat-bubble-friendly {
+    background: hsl(150 30% 12%);
+    border-color: hsl(150 25% 20%);
+}
+
+.chat-bubble-professional {
+    background: hsl(243 45% 95%);
+    border: 1px solid hsl(243 40% 89%);
+}
+.dark .chat-bubble-professional {
+    background: hsl(243 30% 13%);
+    border-color: hsl(243 25% 22%);
+}
+
+.chat-bubble-sales {
+    background: hsl(340 45% 95%);
+    border: 1px solid hsl(340 40% 89%);
+}
+.dark .chat-bubble-sales {
+    background: hsl(340 30% 12%);
+    border-color: hsl(340 25% 20%);
+}
+
+.chat-bubble-time {
+    display: block;
+    font-size: 10px;
+    color: hsl(var(--muted-foreground) / 0.6);
+    margin-top: 3px;
+}
+
+.chat-message-group {
+    animation: bubble-in 0.25s ease-out;
+}
+
+.chat-msg-pinned {
+    position: relative;
+}
+
+.chat-msg-pinned::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    border-radius: 3px;
+    background: hsl(38 92% 50%);
+}
+
+/* Template card */
+.template-card {
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.template-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Analytics card */
+.analytics-stat {
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.1) 0%, hsl(var(--primary) / 0.05) 100%);
+}
+
+.dark .analytics-stat {
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.15) 0%, hsl(var(--primary) / 0.08) 100%);
+}
