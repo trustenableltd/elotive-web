@@ -211,7 +211,7 @@ export const TemplateVariants = ({ templateId, onSelectVariant }) => {
     if (showVariants && templateId) {
       fetchVariants();
     }
-  }, [showVariants, templateId]);
+  }, [showVariants, templateId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchVariants = async () => {
     setLoading(true);
