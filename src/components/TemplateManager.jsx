@@ -206,6 +206,21 @@ export const TemplateVariants = ({ templateId, onSelectVariant }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [variantCount, setVariantCount] = useState(0);
 
+  const fetchVariants = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `${API}/templates/${templateId}/variants`,
+        { withCredentials: true }
+      );
+      setVariants(response.data.variants || []);
+    } catch (error) {
+      console.error('Error fetching variants:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [templateId]);
+
   // Fetch variant count on mount
   useEffect(() => {
     if (templateId) {
@@ -223,22 +238,7 @@ export const TemplateVariants = ({ templateId, onSelectVariant }) => {
     if (showVariants && templateId) {
       fetchVariants();
     }
-  }, [showVariants, templateId]);
-
-  const fetchVariants = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(
-        `${API}/templates/${templateId}/variants`,
-        { withCredentials: true }
-      );
-      setVariants(response.data.variants || []);
-    } catch (error) {
-      console.error('Error fetching variants:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [showVariants, templateId, fetchVariants]);
 
   const handleAddVariant = async () => {
     if (!newVariant.response.trim()) {
