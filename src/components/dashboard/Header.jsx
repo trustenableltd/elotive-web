@@ -9,7 +9,7 @@ import {
 import {
   LogOut, Check, ChevronDown, Building2, Plus,
   Download, FileDown, FileText, Lightbulb, BarChart3,
-  Moon, Sun, Settings, Users, Webhook, CreditCard, Inbox, Radio, Bot
+  Moon, Sun, Settings, Users, Webhook, CreditCard, Inbox, Radio, Bot, Menu
 } from 'lucide-react';
 import { ElotiveLogoMark } from '../BrandLogo';
 
@@ -32,7 +32,7 @@ export const Header = ({
         <span className="text-lg font-semibold font-['Outfit'] hidden sm:block">Elotive AI</span>
       </div>
       
-      <div className="flex items-center gap-2">
+      <div className="hidden md:flex items-center gap-2">
         {/* Profile Selector */}
         {profiles.length > 0 && (
           <DropdownMenu>
@@ -213,6 +213,110 @@ export const Header = ({
         >
           <LogOut className="w-4 h-4" />
         </Button>
+      </div>
+
+      {/* Mobile compact actions */}
+      <div className="md:hidden flex items-center gap-1">
+        <Button
+          variant={activeTab === 'inbox' ? 'default' : 'ghost'}
+          size="icon"
+          onClick={() => hasProFeatures ? onShowInbox?.() : onShowBilling()}
+          className={`w-9 h-9 relative ${!hasProFeatures ? 'opacity-50' : ''}`}
+          title={hasProFeatures ? 'Inbox' : 'Inbox (Pro)'}
+        >
+          <Inbox className="w-4 h-4" />
+          {unreadTotal > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 rounded-full bg-destructive text-destructive-foreground text-[10px] flex items-center justify-center px-1">
+              {unreadTotal > 99 ? '99+' : unreadTotal}
+            </span>
+          )}
+        </Button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="w-9 h-9" title="Menu">
+              <Menu className="w-4 h-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-64">
+            {profiles.length > 0 && (
+              <>
+                <DropdownMenuItem disabled className="opacity-70">
+                  <Building2 className="w-4 h-4 mr-2" />
+                  {activeProfile?.business_name || 'Select Profile'}
+                </DropdownMenuItem>
+                {profiles.map((profile) => (
+                  <DropdownMenuItem
+                    key={profile.profile_id}
+                    onClick={() => onSwitchProfile(profile)}
+                  >
+                    <Building2 className="w-4 h-4 mr-2" />
+                    <span className="truncate">{profile.business_name}</span>
+                    {profile.is_active && <Check className="w-4 h-4 ml-auto text-primary" />}
+                  </DropdownMenuItem>
+                ))}
+                <DropdownMenuItem onClick={onCreateProfile}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add New Profile
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+              </>
+            )}
+
+            <DropdownMenuItem onClick={() => onExport('csv')}>
+              <FileDown className="w-4 h-4 mr-2" />
+              Export CSV
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => hasPdfExport ? onExport('pdf') : onShowBilling()}>
+              <FileText className="w-4 h-4 mr-2" />
+              {hasPdfExport ? 'Export PDF' : 'Export PDF (Pro)'}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => hasProFeatures ? onShowCoaching() : onShowBilling()}>
+              <Lightbulb className="w-4 h-4 mr-2" />
+              {hasProFeatures ? 'AI Coaching' : 'AI Coaching (Pro)'}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => hasProFeatures ? onShowAnalytics() : onShowBilling()}>
+              <BarChart3 className="w-4 h-4 mr-2" />
+              {hasProFeatures ? 'Analytics' : 'Analytics (Pro)'}
+            </DropdownMenuItem>
+
+            {authType === 'user' && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={onShowBilling}>
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  Billing & Plans
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => hasBusinessFeatures ? onShowTeam() : onShowBilling()}>
+                  <Users className="w-4 h-4 mr-2" />
+                  {hasBusinessFeatures ? 'Team' : 'Team (Business)'}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => hasProFeatures ? onShowWebhooks() : onShowBilling()}>
+                  <Webhook className="w-4 h-4 mr-2" />
+                  {hasProFeatures ? 'Webhooks' : 'Webhooks (Pro)'}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => hasProFeatures ? onShowChannels?.() : onShowBilling()}>
+                  <Radio className="w-4 h-4 mr-2" />
+                  {hasProFeatures ? 'Channels' : 'Channels (Pro)'}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => hasProFeatures ? onShowAIAgent?.() : onShowBilling()}>
+                  <Bot className="w-4 h-4 mr-2" />
+                  {hasProFeatures ? 'AI Agent' : 'AI Agent (Pro)'}
+                </DropdownMenuItem>
+              </>
+            )}
+
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => setIsDarkMode(!isDarkMode)}>
+              {isDarkMode ? <Sun className="w-4 h-4 mr-2" /> : <Moon className="w-4 h-4 mr-2" />}
+              {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onLogout}>
+              <LogOut className="w-4 h-4 mr-2" />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   </header>

@@ -56,14 +56,38 @@ const channelColor = (type) => {
   return ct?.color || 'bg-gray-500';
 };
 
+const normalizeBackendBaseUrl = (rawUrl) => {
+  if (!rawUrl) return '';
+  try {
+    const url = new URL(rawUrl);
+    // If backend URL was accidentally set to the frontend host in production,
+    // auto-correct to api.<host> where our FastAPI service lives.
+    if (
+      typeof window !== 'undefined' &&
+      url.hostname === window.location.hostname &&
+      !url.hostname.startsWith('api.') &&
+      !url.hostname.includes('localhost')
+    ) {
+      url.hostname = `api.${url.hostname}`;
+    }
+    return `${url.origin}`;
+  } catch {
+    return String(rawUrl).replace(/\/$/, '');
+  }
+};
+
 const ChannelCard = ({ channel, onDelete, onToggle, onTestConnection }) => {
   const [copied, setCopied] = useState(false);
   const [showSecrets, setShowSecrets] = useState(false);
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState(null);
   const Icon = channelIcon(channel.type);
-  const baseUrl = window.location.origin.replace(':3000', ':8000');
-  const webhookUrl = `${baseUrl}/api/channels/inbound/${channel.channel_id}`;
+  // Use backend base URL from env in production so webhook points to API domain.
+  const configuredBackend = normalizeBackendBaseUrl(process.env.REACT_APP_BACKEND_URL || '');
+  const localFallback = window.location.origin.replace(':3000', ':8000');
+  const baseUrl = configuredBackend || localFallback;
+  const webhookPath = channel.webhook_url || `/api/channels/inbound/${channel.channel_id}`;
+  const webhookUrl = webhookPath.startsWith('http') ? webhookPath : `${baseUrl}${webhookPath}`;
   const widgetScript = channel.type === 'web'
     ? `<script>\n(function() {\n  fetch("${baseUrl}/widget/${channel.channel_id}.js", {\n    headers: { "ngrok-skip-browser-warning": "true" }\n  })\n  .then(function(r) { return r.text(); })\n  .then(function(js) {\n    var s = document.createElement("script");\n    s.textContent = js;\n    document.body.appendChild(s);\n  })\n  .catch(function(e) { console.error("Widget load error:", e); });\n})();\n</script>`
     : null;

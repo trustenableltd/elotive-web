@@ -375,6 +375,65 @@ export const AIAgentPanel = ({ onBack }) => {
         </div>
       </Card>
 
+      {/* Simple Rules */}
+      <Card className="p-5 space-y-4">
+        <div className="flex items-center gap-2">
+          <CheckCircle className="w-4 h-4 text-muted-foreground" />
+          <h3 className="font-medium text-sm">Simple Rules (Always On)</h3>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Keep behavior predictable without complex prompts. These rules apply across auto-replies.
+        </p>
+
+        <div className="space-y-3">
+          <div className="flex items-center justify-between p-3 rounded-lg border bg-muted/30">
+            <div>
+              <p className="text-sm font-medium">First message: no price</p>
+              <p className="text-xs text-muted-foreground">Avoid giving a quote in the first reply.</p>
+            </div>
+            <Switch
+              checked={settings.rule_first_message_no_price ?? true}
+              onCheckedChange={v => update('rule_first_message_no_price', v)}
+            />
+          </div>
+
+          <div className="flex items-center justify-between p-3 rounded-lg border bg-muted/30">
+            <div>
+              <p className="text-sm font-medium">First message: ask "here or WhatsApp"</p>
+              <p className="text-xs text-muted-foreground">Use a clear CTA asking where to share price and availability.</p>
+            </div>
+            <Switch
+              checked={settings.rule_first_message_price_channel_prompt ?? true}
+              onCheckedChange={v => update('rule_first_message_price_channel_prompt', v)}
+            />
+          </div>
+
+          <div className="flex items-center justify-between p-3 rounded-lg border bg-muted/30">
+            <div>
+              <p className="text-sm font-medium">Use customer first name</p>
+              <p className="text-xs text-muted-foreground">Personalize replies with first name when available.</p>
+            </div>
+            <Switch
+              checked={settings.rule_use_customer_first_name ?? true}
+              onCheckedChange={v => update('rule_use_customer_first_name', v)}
+            />
+          </div>
+
+          <div className="p-3 rounded-lg border bg-muted/30">
+            <label className="text-sm font-medium">Max paragraphs</label>
+            <p className="text-xs text-muted-foreground mb-2">Keep replies short and easy to read.</p>
+            <input
+              type="number"
+              min="1"
+              max="4"
+              value={settings.rule_max_paragraphs ?? 2}
+              onChange={e => update('rule_max_paragraphs', Math.max(1, Math.min(4, parseInt(e.target.value || '2', 10))))}
+              className="w-20 h-8 px-2 rounded-md border bg-background text-sm text-center focus:outline-none focus:ring-1 focus:ring-ring"
+            />
+          </div>
+        </div>
+      </Card>
+
       {/* Follow-Up Settings */}
       <Card className="p-5 space-y-4">
         <div className="flex items-center justify-between">

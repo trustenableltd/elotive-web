@@ -4,7 +4,8 @@ import { Bookmark, X, Trash2 } from 'lucide-react';
 
 export const TemplatesPanel = ({
   show, templates, onClose, onApply, onDelete,
-  setTemplates, setAiResponse, setShowTemplates
+  setTemplates, setAiResponse, setShowTemplates,
+  onApplyForThread, activeConversation
 }) => {
   if (!show) return null;
 
@@ -51,6 +52,13 @@ export const TemplatesPanel = ({
               </div>
               
               <div className="flex items-center gap-2 mb-3">
+                <span className={`px-2 py-0.5 rounded text-xs ${
+                  (tmpl.mode || 'exact') === 'pattern'
+                    ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300'
+                    : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                }`}>
+                  {(tmpl.mode || 'exact') === 'pattern' ? 'Pattern' : 'Exact'}
+                </span>
                 <span className={`px-2 py-0.5 rounded text-xs ${
                   tmpl.tone === 'friendly' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400' :
                   tmpl.tone === 'professional' ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400' :
@@ -105,13 +113,25 @@ export const TemplatesPanel = ({
                 </div>
               </div>
 
-              <Button
-                size="sm"
-                className="mt-3 w-full text-xs"
-                onClick={() => onApply(tmpl)}
-              >
-                Use Template
-              </Button>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <Button
+                  size="sm"
+                  className="text-xs"
+                  onClick={() => onApply(tmpl)}
+                >
+                  {(tmpl.mode || 'exact') === 'pattern' ? 'Use Once' : 'Use Once'}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="text-xs"
+                  disabled={!activeConversation}
+                  onClick={() => onApplyForThread?.(tmpl)}
+                  title={activeConversation ? 'Apply this template to the current thread' : 'Open a conversation first'}
+                >
+                  Use For Thread
+                </Button>
+              </div>
             </div>
           ))}
         </div>

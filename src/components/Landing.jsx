@@ -19,12 +19,12 @@ export const Landing = () => {
     <div className="min-h-screen hero-gradient">
       {/* Header */}
       <header className="px-4 sm:px-6 py-4">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 justify-center sm:justify-start">
             <ElotiveLogoMark className="w-10 h-10" />
             <span className="text-xl font-semibold font-['Outfit']">Elotive AI</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 w-full sm:w-auto">
+          <div className="hidden sm:grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 w-full sm:w-auto">
             <Button 
               onClick={() => login('google')}
               data-testid="login-google-btn"
@@ -45,7 +45,7 @@ export const Landing = () => {
       </header>
 
       {/* Hero Section */}
-      <main className="px-4 sm:px-6 py-10 md:py-24">
+      <main className="px-4 sm:px-6 py-8 md:py-24">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left Content */}
@@ -55,12 +55,12 @@ export const Landing = () => {
                 AI Agent For Service Businesses
               </div>
               
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold font-['Outfit'] tracking-tight leading-tight">
+              <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-['Outfit'] tracking-tight leading-tight">
                 Turn enquiries into{' '}
                 <span className="text-primary">booked jobs automatically</span>
               </h1>
               
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-lg">
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-lg">
                 Elotive AI replies instantly, provides accurate quotes, and follows up automatically
                 so you convert more leads into confirmed bookings.
               </p>

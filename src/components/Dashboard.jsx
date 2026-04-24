@@ -74,7 +74,18 @@ export const Dashboard = () => {
   const [saveTemplateDialog, setSaveTemplateDialog] = useState(false);
   const [templateName, setTemplateName] = useState('');
   const [templateCategory, setTemplateCategory] = useState('general');
+  const [templateMode, setTemplateMode] = useState('exact');
   const [messageToSave, setMessageToSave] = useState(null);
+  const [activeTemplateContext, setActiveTemplateContext] = useState(null);
+  const [suppressTemplateSuggestions, setSuppressTemplateSuggestions] = useState(false);
+
+  const activeThreadTemplate = activeConversation?.thread_template_id
+    ? {
+        id: activeConversation.thread_template_id,
+        name: activeConversation.thread_template_name,
+        mode: activeConversation.thread_template_mode,
+      }
+    : null;
   
   // Analytics state
   const [analytics, setAnalytics] = useState(null);
@@ -464,7 +475,11 @@ export const Dashboard = () => {
         conversation_id: activeConversation?.conversation_id,
         profile_id: activeProfile?.profile_id,
         business_name: activeProfile?.business_name,
-        business_info: activeProfile?.business_info
+        business_info: activeProfile?.business_info,
+        template_mode: activeTemplateContext?.mode || activeConversation?.thread_template_mode,
+        template_ai_response: activeTemplateContext?.ai_response || activeConversation?.thread_template_ai_response,
+        template_guidelines: activeTemplateContext?.guidelines || activeConversation?.thread_template_guidelines,
+        template_name: activeTemplateContext?.name || activeConversation?.thread_template_name
       }, { withCredentials: true });
 
       setAiResponse(response.data.response);
@@ -488,6 +503,7 @@ export const Dashboard = () => {
       }
       
       setCustomerMessage('');
+      setActiveTemplateContext(null);
       fetchMessages();
       fetchConversations();
     } catch (error) {
@@ -555,10 +571,12 @@ export const Dashboard = () => {
     setCustomerMessage('');
     setCustomerName('');
     setAiResponse('');
+    setActiveTemplateContext(null);
     setCurrentMessageId(null);
     setCurrentRating(0);
     setChatSearch('');
     setShowChatSearch(false);
+    setSuppressTemplateSuggestions(false);
   };
 
   const loadConversation = async (conversation) => {
@@ -572,6 +590,7 @@ export const Dashboard = () => {
       setConversationMessages(response.data.messages || []);
       setActiveConversation(response.data.conversation);
       setCustomerMessage('');
+      setActiveTemplateContext(null);
       setAiResponse('');
       setCurrentMessageId(null);
       setCurrentRating(0);
@@ -690,11 +709,13 @@ export const Dashboard = () => {
     try {
       await axios.post(`${API}/messages/${messageToSave}/save-template`, {
         name: templateName.trim(),
-        category: templateCategory
+        category: templateCategory,
+        mode: templateMode
       }, { withCredentials: true });
       fetchTemplates();
       setSaveTemplateDialog(false);
       setTemplateName('');
+      setTemplateMode('exact');
       setMessageToSave(null);
       toast.success('Template saved successfully');
     } catch (error) {
@@ -706,9 +727,65 @@ export const Dashboard = () => {
   const applyTemplate = (template) => {
     setCustomerMessage(template.customer_message);
     setTone(template.tone);
-    setAiResponse(template.ai_response);
+    setSuppressTemplateSuggestions(true);
+    const mode = (template.mode || 'exact').toLowerCase();
+    if (mode === 'pattern') {
+      setAiResponse('');
+      setActiveTemplateContext(template);
+      toast.success(`Pattern template loaded: ${template.name}. Click Generate Response.`);
+    } else {
+      setAiResponse(template.ai_response);
+      setActiveTemplateContext(null);
+      toast.success(`Using exact template: ${template.name}`);
+    }
     setShowTemplates(false);
-    toast.success(`Using template: ${template.name}`);
+  };
+
+  const applyTemplateForThread = async (template) => {
+    if (!activeConversation?.conversation_id) {
+      toast.error('Open a conversation first to apply a thread template');
+      return;
+    }
+
+    try {
+      const response = await axios.patch(
+        `${API}/conversations/${activeConversation.conversation_id}`,
+        { thread_template_id: template.template_id },
+        { withCredentials: true }
+      );
+      setActiveConversation(response.data.conversation);
+      setActiveTemplateContext(null);
+      setSuppressTemplateSuggestions(true);
+      setTone(template.tone || tone);
+      setShowTemplates(false);
+      toast.success(`Template applied to this thread: ${template.name}`);
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to apply template to thread');
+    }
+  };
+
+  const clearThreadTemplate = async () => {
+    if (!activeConversation?.conversation_id) return;
+
+    try {
+      const response = await axios.patch(
+        `${API}/conversations/${activeConversation.conversation_id}`,
+        { clear_thread_template: true },
+        { withCredentials: true }
+      );
+      setActiveConversation(response.data.conversation);
+      setActiveTemplateContext(null);
+      setSuppressTemplateSuggestions(false);
+      toast.success('Thread template cleared');
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to clear thread template');
+    }
+  };
+
+  const handleUserMessageEdit = (nextValue) => {
+    if (suppressTemplateSuggestions && nextValue?.trim()) {
+      setSuppressTemplateSuggestions(false);
+    }
   };
 
   const deleteTemplate = async (templateId) => {
@@ -1048,73 +1125,8 @@ export const Dashboard = () => {
         activeTab={activeTab}
       />
 
-      {/* Mobile Tab Navigation */}
-      <div className="lg:hidden border-b bg-card px-3 py-2 overflow-x-auto [padding-bottom:max(0.5rem,env(safe-area-inset-bottom))]">
-        <div className="flex gap-2 min-w-max">
-        <Button
-          variant={activeTab === 'generate' ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => setActiveTab('generate')}
-          className="shrink-0 whitespace-nowrap h-9"
-        >
-          <MessageSquare className="w-4 h-4 mr-2" />
-          Generate
-        </Button>
-        <Button
-          variant={activeTab === 'conversations' ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => setActiveTab('conversations')}
-          className="shrink-0 whitespace-nowrap h-9"
-        >
-          <MessageCircle className="w-4 h-4 mr-2" />
-          Chats
-        </Button>
-        <Button
-          variant={activeTab === 'inbox' ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => { setActiveTab('inbox'); fetchInbox(channelFilter, statusFilter); }}
-          className="shrink-0 whitespace-nowrap relative h-9"
-        >
-          <Inbox className="w-4 h-4 mr-2" />
-          Inbox
-          {unreadTotal > 0 && (
-            <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-destructive text-destructive-foreground text-[10px] flex items-center justify-center">
-              {unreadTotal}
-            </span>
-          )}
-        </Button>
-        <Button
-          variant={activeTab === 'profile' ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => setActiveTab('profile')}
-          className="shrink-0 whitespace-nowrap h-9"
-        >
-          <Settings className="w-4 h-4 mr-2" />
-          Profile
-        </Button>
-        <Button
-          variant={activeTab === 'ai-agent' ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => setActiveTab('ai-agent')}
-          className="shrink-0 whitespace-nowrap h-9"
-        >
-          <Bot className="w-4 h-4 mr-2" />
-          AI
-        </Button>
-        <Button
-          variant={activeTab === 'analytics' ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => setActiveTab('analytics')}
-          className="shrink-0 whitespace-nowrap h-9"
-        >
-          <BarChart3 className="w-4 h-4 mr-2" />
-          Stats
-        </Button>
-        </div>
-      </div>
-
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 pb-24 lg:pb-6">
         {/* Pending Invitations Banner */}
         {pendingInvitations.length > 0 && (
           <div className="mb-6 space-y-2">
@@ -1227,6 +1239,8 @@ export const Dashboard = () => {
               chatEndRef={chatEndRef}
               onTogglePin={togglePinMessage}
               onNewConversation={startNewConversation}
+              threadTemplate={activeThreadTemplate}
+              onClearThreadTemplate={clearThreadTemplate}
             />
 
             <CustomerMessageInput
@@ -1242,6 +1256,8 @@ export const Dashboard = () => {
               isGenerating={isGenerating}
               onGenerate={generateResponse}
               onApplyTemplate={applyTemplate}
+              suppressTemplateSuggestions={suppressTemplateSuggestions}
+              onUserMessageEdit={handleUserMessageEdit}
             />
 
             <TemplatesPanel
@@ -1249,10 +1265,12 @@ export const Dashboard = () => {
               templates={templates}
               onClose={() => setShowTemplates(false)}
               onApply={applyTemplate}
+              onApplyForThread={applyTemplateForThread}
               onDelete={deleteTemplate}
               setTemplates={setTemplates}
               setAiResponse={setAiResponse}
               setShowTemplates={setShowTemplates}
+              activeConversation={activeConversation}
             />
 
             <AIResponseCard
@@ -1286,6 +1304,52 @@ export const Dashboard = () => {
         </div>
       </div>
 
+      {/* Mobile Bottom Navigation */}
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 border-t bg-card/95 backdrop-blur px-2 pt-1 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+        <div className="grid grid-cols-5 gap-1">
+          <button
+            onClick={() => setActiveTab('generate')}
+            className={`h-14 rounded-xl flex flex-col items-center justify-center text-[11px] ${activeTab === 'generate' ? 'bg-primary/10 text-primary' : 'text-muted-foreground'}`}
+          >
+            <MessageSquare className="w-4 h-4 mb-1" />
+            Generate
+          </button>
+          <button
+            onClick={() => setActiveTab('conversations')}
+            className={`h-14 rounded-xl flex flex-col items-center justify-center text-[11px] ${activeTab === 'conversations' ? 'bg-primary/10 text-primary' : 'text-muted-foreground'}`}
+          >
+            <MessageCircle className="w-4 h-4 mb-1" />
+            Chats
+          </button>
+          <button
+            onClick={() => { setActiveTab('inbox'); fetchInbox(channelFilter, statusFilter); }}
+            className={`h-14 rounded-xl relative flex flex-col items-center justify-center text-[11px] ${activeTab === 'inbox' ? 'bg-primary/10 text-primary' : 'text-muted-foreground'}`}
+          >
+            <Inbox className="w-4 h-4 mb-1" />
+            Inbox
+            {unreadTotal > 0 && (
+              <span className="absolute top-1 right-4 min-w-[16px] h-4 rounded-full bg-destructive text-destructive-foreground text-[10px] flex items-center justify-center px-1">
+                {unreadTotal > 99 ? '99+' : unreadTotal}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={() => setActiveTab('ai-agent')}
+            className={`h-14 rounded-xl flex flex-col items-center justify-center text-[11px] ${activeTab === 'ai-agent' ? 'bg-primary/10 text-primary' : 'text-muted-foreground'}`}
+          >
+            <Bot className="w-4 h-4 mb-1" />
+            AI
+          </button>
+          <button
+            onClick={() => setActiveTab('profile')}
+            className={`h-14 rounded-xl flex flex-col items-center justify-center text-[11px] ${activeTab === 'profile' ? 'bg-primary/10 text-primary' : 'text-muted-foreground'}`}
+          >
+            <Settings className="w-4 h-4 mb-1" />
+            Profile
+          </button>
+        </div>
+      </div>
+
       {/* Dialogs */}
       <SaveTemplateDialog
         open={saveTemplateDialog}
@@ -1294,6 +1358,8 @@ export const Dashboard = () => {
         setTemplateName={setTemplateName}
         templateCategory={templateCategory}
         setTemplateCategory={setTemplateCategory}
+        templateMode={templateMode}
+        setTemplateMode={setTemplateMode}
         onSave={saveAsTemplate}
       />
 

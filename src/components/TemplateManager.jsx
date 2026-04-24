@@ -16,13 +16,19 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 // ============ PHASE 1: TEMPLATE SUGGESTIONS ============
 
-export const TemplateSuggestions = ({ customerMessage, onApply }) => {
+export const TemplateSuggestions = ({ customerMessage, onApply, suppress = false }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [hint, setHint] = useState('');
   const [loading, setLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   const fetchSuggestions = useCallback(async () => {
+    if (suppress) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
     if (!customerMessage.trim() || customerMessage.trim().length < 5) {
       setSuggestions([]);
       setShowSuggestions(false);
@@ -51,10 +57,16 @@ export const TemplateSuggestions = ({ customerMessage, onApply }) => {
     } finally {
       setLoading(false);
     }
-  }, [customerMessage]);
+  }, [customerMessage, suppress]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      if (suppress) {
+        setSuggestions([]);
+        setShowSuggestions(false);
+        return;
+      }
+
       if (customerMessage.trim().length >= 5) {
         fetchSuggestions();
       } else {
@@ -64,9 +76,9 @@ export const TemplateSuggestions = ({ customerMessage, onApply }) => {
     }, 800);
 
     return () => clearTimeout(timer);
-  }, [customerMessage, fetchSuggestions]);
+  }, [customerMessage, fetchSuggestions, suppress]);
 
-  if (!showSuggestions || suggestions.length === 0) {
+  if (suppress || !showSuggestions || suggestions.length === 0) {
     return null;
   }
 
@@ -211,7 +223,7 @@ export const TemplateVariants = ({ templateId, onSelectVariant }) => {
     if (showVariants && templateId) {
       fetchVariants();
     }
-  }, [showVariants, templateId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [showVariants, templateId]);
 
   const fetchVariants = async () => {
     setLoading(true);

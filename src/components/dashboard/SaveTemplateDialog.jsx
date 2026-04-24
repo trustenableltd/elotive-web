@@ -4,7 +4,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 
 export const SaveTemplateDialog = ({ 
   open, onOpenChange, templateName, setTemplateName, 
-  templateCategory, setTemplateCategory, onSave 
+  templateCategory, setTemplateCategory,
+  templateMode, setTemplateMode,
+  onSave 
 }) => (
   <Dialog open={open} onOpenChange={onOpenChange}>
     <DialogContent>
@@ -34,6 +36,18 @@ export const SaveTemplateDialog = ({
             <option value="support">Support</option>
             <option value="booking">Booking</option>
             <option value="intro">Introductions</option>
+          </select>
+        </div>
+        <div>
+          <label className="text-sm text-muted-foreground mb-1 block">Template Mode</label>
+          <select
+            value={templateMode}
+            onChange={(e) => setTemplateMode(e.target.value)}
+            className="w-full p-2 rounded-lg border bg-background"
+            data-testid="template-mode-select"
+          >
+            <option value="exact">Exact (reuse response as-is)</option>
+            <option value="pattern">Pattern (same structure, rewrite to fit message)</option>
           </select>
         </div>
       </div>

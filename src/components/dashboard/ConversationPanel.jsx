@@ -9,7 +9,8 @@ export const ConversationPanel = ({
   activeConversation, customerName, conversationMessages,
   pinnedMessages, filteredMessages, chatExpanded, setChatExpanded,
   chatSearch, setChatSearch, showChatSearch, setShowChatSearch,
-  chatEndRef, onTogglePin, onNewConversation
+  chatEndRef, onTogglePin, onNewConversation,
+  threadTemplate, onClearThreadTemplate
 }) => {
   if (!activeConversation) return null;
 
@@ -26,11 +27,25 @@ export const ConversationPanel = ({
             <p className="text-[11px] text-muted-foreground">
               {conversationMessages.length} message{conversationMessages.length !== 1 ? 's' : ''}
               {pinnedMessages.length > 0 && <> &middot; {pinnedMessages.length} pinned</>}
+              {threadTemplate?.name && <> &middot; Template: {threadTemplate.name}</>}
               {' '}&middot; AI context active
             </p>
           </div>
         </div>
         <div className="flex items-center gap-1 shrink-0">
+          {threadTemplate?.name && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 text-xs"
+              onClick={onClearThreadTemplate}
+              data-testid="clear-thread-template-btn"
+              title="Clear thread template"
+            >
+              <X className="w-3 h-3 mr-1" />
+              <span className="hidden sm:inline">Clear Template</span>
+            </Button>
+          )}
           {conversationMessages.length > 0 && (
             <Button
               variant="ghost"

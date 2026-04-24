@@ -4,11 +4,60 @@ import { Input } from '../ui/input';
 import { TemplateSuggestions } from '../TemplateManager';
 import { MessageSquare, Bookmark, Loader2, Send } from 'lucide-react';
 
+// Extract the first name from a Nextdoor / Facebook-style post header.
+// Posts typically start with "Firstname Lastname\nNeighbourhood • time • ..."
+function extractNameFromPost(text) {
+  const lines = text
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (!lines.length) return null;
+
+  const firstLine = lines[0];
+  const secondLine = lines[1] || '';
+
+  // Ignore likely message content lines; only attempt on short name-like headers.
+  if (firstLine.length > 48 || /\b(need|looking|quote|price|help|hello|hi)\b/i.test(firstLine)) {
+    return null;
+  }
+
+  // Require a social-post style signal on the next line to reduce false positives.
+  const hasSocialSignal =
+    /[•·]/.test(secondLine) ||
+    /\b\d{1,2}\s*(m|min|h|hr|hrs|d|day|days)\b/i.test(secondLine) ||
+    /\b(today|yesterday)\b/i.test(secondLine);
+
+  if (!hasSocialSignal) return null;
+
+  // Match name with 2-4 capitalized words (e.g. "Jakaria Sadeque", "Emma W").
+  const fullNameMatch = firstLine.match(
+    /^([A-Z][a-zA-Zéàèùâêîôûäëïöü'-]+)(?:\s+[A-Z][a-zA-Zéàèùâêîôûäëïöü'.-]*){1,3}$/
+  );
+
+  return fullNameMatch ? fullNameMatch[1] : null;
+}
+
 export const CustomerMessageInput = ({
   customerMessage, setCustomerMessage, customerName, setCustomerName,
   tone, setTone, tones, showTemplates, setShowTemplates,
-  isGenerating, onGenerate, onApplyTemplate
-}) => (
+  isGenerating, onGenerate, onApplyTemplate,
+  suppressTemplateSuggestions = false,
+  onUserMessageEdit
+}) => {
+  const handlePaste = (e) => {
+    const pasted = e.clipboardData.getData('text');
+    if (!pasted) return;
+    // Auto-fill name only when the field is currently empty
+    if (!customerName || customerName.trim() === '') {
+      const detected = extractNameFromPost(pasted);
+      if (detected) {
+        setCustomerName(detected);
+      }
+    }
+  };
+
+  return (
   <div className="bg-card rounded-xl border p-6 card-shadow">
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center gap-2">
@@ -31,7 +80,7 @@ export const CustomerMessageInput = ({
       <Input
         value={customerName}
         onChange={(e) => setCustomerName(e.target.value)}
-        placeholder="Customer name (e.g., Sophie, Laurent)"
+        placeholder="Customer name — auto-filled when you paste a post"
         className="max-w-xs"
         data-testid="customer-name-input"
       />
@@ -39,14 +88,22 @@ export const CustomerMessageInput = ({
     
     <Textarea
       value={customerMessage}
-      onChange={(e) => setCustomerMessage(e.target.value)}
-      placeholder="Paste the customer's inquiry here...&#10;&#10;e.g., I need a van to move a 2-bed flat from SW16 to KT17 on 4th March"
+      onChange={(e) => {
+        setCustomerMessage(e.target.value);
+        onUserMessageEdit?.(e.target.value);
+      }}
+      onPaste={handlePaste}
+      placeholder={"Paste the full post here — name is detected automatically\n\ne.g., Jakaria Sadeque\nWealdstone • 13m\nHi neighbours, I'm looking for reliable removal services..."}
       className="min-h-[150px] resize-none message-input border-muted"
       data-testid="customer-message-input"
     />
 
     {/* Template Suggestions */}
-    <TemplateSuggestions customerMessage={customerMessage} onApply={onApplyTemplate} />
+    <TemplateSuggestions
+      customerMessage={customerMessage}
+      onApply={onApplyTemplate}
+      suppress={suppressTemplateSuggestions}
+    />
 
     {/* Tone Selector */}
     <div className="mt-4">
@@ -90,3 +147,4 @@ export const CustomerMessageInput = ({
     </Button>
   </div>
 );
+};
