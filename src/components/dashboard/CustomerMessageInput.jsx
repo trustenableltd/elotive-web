@@ -80,7 +80,7 @@ export const CustomerMessageInput = ({
       <Input
         value={customerName}
         onChange={(e) => setCustomerName(e.target.value)}
-        placeholder="Customer name — auto-filled when you paste a post"
+        placeholder="Customer name — auto-filled when you paste an enquiry"
         className="max-w-xs"
         data-testid="customer-name-input"
       />
@@ -93,7 +93,7 @@ export const CustomerMessageInput = ({
         onUserMessageEdit?.(e.target.value);
       }}
       onPaste={handlePaste}
-      placeholder={"Paste the full post here — name is detected automatically\n\ne.g., Jakaria Sadeque\nWealdstone • 13m\nHi neighbours, I'm looking for reliable removal services..."}
+      placeholder={"Paste the full customer enquiry here — name is detected automatically\n\ne.g., Jakaria Sadeque\nHi, I'm looking for a reliable service and would like a quote for this job."}
       className="min-h-[150px] resize-none message-input border-muted"
       data-testid="customer-message-input"
     />
