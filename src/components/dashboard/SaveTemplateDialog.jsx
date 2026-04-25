@@ -20,7 +20,7 @@ export const SaveTemplateDialog = ({
           <Input
             value={templateName}
             onChange={(e) => setTemplateName(e.target.value)}
-            placeholder="e.g., Nextdoor replies, Facebook posts, Email enquiries"
+            placeholder="e.g., Inbound customer enquiries"
             data-testid="template-name-input"
           />
         </div>
@@ -59,7 +59,7 @@ export const SaveTemplateDialog = ({
           <textarea
             value={threadInstructions}
             onChange={(e) => setThreadInstructions(e.target.value)}
-            placeholder={"e.g., This thread handles Nextdoor van removal requests. Greet customers by their first name, reference the specific items they mentioned, give a realistic price range (£70–£150), mention availability today, and end with a clear call to action."}
+            placeholder={"e.g., This thread handles inbound customer enquiries for this business. Greet customers by their first name, acknowledge the specific request they shared, provide a realistic estimate or clear next step, mention availability or timeline, and close with a booking call to action."}
             className="w-full p-2 rounded-lg border bg-background text-sm resize-none"
             rows={5}
             data-testid="template-thread-instructions"
