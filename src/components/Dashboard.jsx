@@ -514,8 +514,8 @@ export const Dashboard = () => {
     } catch (error) {
       console.error('Error generating response:', error);
       if (error.response?.status === 429) {
-        toast.error('Monthly AI handling limit reached. Upgrade your plan for unlimited handling.', {
-          action: { label: 'Upgrade', onClick: () => { setShowBilling(true); fetchSubscription(); } }
+        toast.error(error.response?.data?.detail || 'Monthly AI handling limit reached.', {
+          action: { label: 'Billing', onClick: () => { setShowBilling(true); fetchSubscription(); } }
         });
       } else {
         toast.error(error.response?.data?.detail || 'Failed to generate response');
