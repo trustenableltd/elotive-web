@@ -43,6 +43,7 @@ export const Dashboard = () => {
   // State
   const [customerMessage, setCustomerMessage] = useState('');
   const [customerName, setCustomerName] = useState('');
+  const [userInstruction, setUserInstruction] = useState('');
   const [tone, setTone] = useState('friendly');
   const [aiResponse, setAiResponse] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -481,7 +482,8 @@ export const Dashboard = () => {
         template_mode: activeTemplateContext?.mode || activeConversation?.thread_template_mode,
         template_ai_response: activeTemplateContext?.ai_response || activeConversation?.thread_template_ai_response,
         template_guidelines: activeTemplateContext?.guidelines || activeConversation?.thread_template_guidelines,
-        template_name: activeTemplateContext?.name || activeConversation?.thread_template_name
+        template_name: activeTemplateContext?.name || activeConversation?.thread_template_name,
+        user_instruction: userInstruction || undefined
       }, { withCredentials: true });
 
       setAiResponse(response.data.response);
@@ -505,6 +507,7 @@ export const Dashboard = () => {
       }
       
       setCustomerMessage('');
+      setUserInstruction('');
       setActiveTemplateContext(null);
       fetchMessages();
       fetchConversations();
@@ -1275,6 +1278,8 @@ export const Dashboard = () => {
               onApplyTemplate={applyTemplate}
               suppressTemplateSuggestions={suppressTemplateSuggestions}
               onUserMessageEdit={handleUserMessageEdit}
+              userInstruction={userInstruction}
+              setUserInstruction={setUserInstruction}
             />
 
             <TemplatesPanel

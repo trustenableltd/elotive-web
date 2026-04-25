@@ -43,7 +43,8 @@ export const CustomerMessageInput = ({
   tone, setTone, tones, showTemplates, setShowTemplates,
   isGenerating, onGenerate, onApplyTemplate,
   suppressTemplateSuggestions = false,
-  onUserMessageEdit
+  onUserMessageEdit,
+  userInstruction, setUserInstruction
 }) => {
   const handlePaste = (e) => {
     const pasted = e.clipboardData.getData('text');
@@ -97,6 +98,17 @@ export const CustomerMessageInput = ({
       className="min-h-[150px] resize-none message-input border-muted"
       data-testid="customer-message-input"
     />
+
+    {/* Coach the AI — optional instruction from the business owner */}
+    <div className="mt-3">
+      <Input
+        value={userInstruction || ''}
+        onChange={(e) => setUserInstruction?.(e.target.value)}
+        placeholder="Coach the AI (optional) — e.g., ask for postcode and stairs, be more urgent, mention availability today"
+        className="text-sm"
+        data-testid="user-instruction-input"
+      />
+    </div>
 
     {/* Template Suggestions */}
     <TemplateSuggestions

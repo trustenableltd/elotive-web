@@ -27,16 +27,24 @@ export const TemplatesPanel = ({
         </p>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2">
-          {templates.map((tmpl) => (
+          {templates.map((tmpl) => {
+            const isThreadAI = !!tmpl.thread_instructions;
+            return (
             <div
               key={tmpl.template_id}
               className="template-card p-4 rounded-lg border bg-muted/30 group flex flex-col"
               data-testid={`template-${tmpl.template_id}`}
             >
               <div className="flex items-start justify-between mb-2">
-                <div className="flex-1 cursor-pointer" onClick={() => onApply(tmpl)}>
+                <div className="flex-1 cursor-pointer" onClick={() => isThreadAI ? onApplyForThread?.(tmpl) : onApply(tmpl)}>
                   <span className="font-medium text-sm">{tmpl.name}</span>
-                  <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{tmpl.customer_message}</p>
+                  {isThreadAI ? (
+                    <p className="text-xs text-violet-700 dark:text-violet-300 mt-1 line-clamp-2 italic" title={tmpl.thread_instructions}>
+                      AI: {tmpl.thread_instructions}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{tmpl.customer_message}</p>
+                  )}
                 </div>
                 <Button
                   variant="ghost"
@@ -52,13 +60,19 @@ export const TemplatesPanel = ({
               </div>
               
               <div className="flex items-center gap-2 mb-3">
-                <span className={`px-2 py-0.5 rounded text-xs ${
-                  (tmpl.mode || 'exact') === 'pattern'
-                    ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300'
-                    : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
-                }`}>
-                  {(tmpl.mode || 'exact') === 'pattern' ? 'Pattern' : 'Exact'}
-                </span>
+                {isThreadAI ? (
+                  <span className="px-2 py-0.5 rounded text-xs bg-violet-50 text-violet-700 dark:bg-violet-950/50 dark:text-violet-300">
+                    Thread AI
+                  </span>
+                ) : (
+                  <span className={`px-2 py-0.5 rounded text-xs ${
+                    (tmpl.mode || 'exact') === 'pattern'
+                      ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300'
+                      : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                  }`}>
+                    {(tmpl.mode || 'exact') === 'pattern' ? 'Pattern' : 'Exact'}
+                  </span>
+                )}
                 <span className={`px-2 py-0.5 rounded text-xs ${
                   tmpl.tone === 'friendly' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400' :
                   tmpl.tone === 'professional' ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400' :
@@ -70,11 +84,6 @@ export const TemplatesPanel = ({
                 {tmpl.avg_rating > 0 && (
                   <span className="text-xs text-yellow-600 dark:text-yellow-400 font-medium">
                     ★ {tmpl.avg_rating.toFixed(1)}
-                  </span>
-                )}
-                {tmpl.thread_instructions && (
-                  <span className="px-2 py-0.5 rounded text-xs bg-violet-50 text-violet-700 dark:bg-violet-950/50 dark:text-violet-300" title={tmpl.thread_instructions}>
-                    Thread AI
                   </span>
                 )}
               </div>
@@ -118,27 +127,45 @@ export const TemplatesPanel = ({
                 </div>
               </div>
 
-              <div className="mt-3 grid grid-cols-2 gap-2">
-                <Button
-                  size="sm"
-                  className="text-xs"
-                  onClick={() => onApply(tmpl)}
-                >
-                  {(tmpl.mode || 'exact') === 'pattern' ? 'Use Once' : 'Use Once'}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="text-xs"
-                  disabled={!activeConversation}
-                  onClick={() => onApplyForThread?.(tmpl)}
-                  title={activeConversation ? 'Apply this template to the current thread' : 'Open a conversation first'}
-                >
-                  Use For Thread
-                </Button>
-              </div>
+              {isThreadAI ? (
+                <div className="mt-3">
+                  <Button
+                    size="sm"
+                    className="text-xs w-full bg-violet-600 hover:bg-violet-700 text-white"
+                    disabled={!activeConversation}
+                    onClick={() => onApplyForThread?.(tmpl)}
+                    title={activeConversation ? 'Set AI instructions for this conversation thread' : 'Open a conversation first'}
+                  >
+                    Apply to Thread
+                  </Button>
+                  {!activeConversation && (
+                    <p className="text-xs text-muted-foreground text-center mt-1">Open a conversation first</p>
+                  )}
+                </div>
+              ) : (
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  <Button
+                    size="sm"
+                    className="text-xs"
+                    onClick={() => onApply(tmpl)}
+                  >
+                    Use Once
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="text-xs"
+                    disabled={!activeConversation}
+                    onClick={() => onApplyForThread?.(tmpl)}
+                    title={activeConversation ? 'Apply this template to the current thread' : 'Open a conversation first'}
+                  >
+                    Use For Thread
+                  </Button>
+                </div>
+              )}
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
