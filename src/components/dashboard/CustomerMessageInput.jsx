@@ -44,6 +44,7 @@ export const CustomerMessageInput = ({
   isGenerating, onGenerate, onApplyTemplate,
   suppressTemplateSuggestions = false,
   onUserMessageEdit,
+  onEnableTemplateSuggestions,
   userInstruction, setUserInstruction
 }) => {
   const handlePaste = (e) => {
@@ -116,6 +117,19 @@ export const CustomerMessageInput = ({
       onApply={onApplyTemplate}
       suppress={suppressTemplateSuggestions}
     />
+
+    {suppressTemplateSuggestions && customerMessage.trim() && (
+      <div className="mt-3">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onEnableTemplateSuggestions}
+          data-testid="show-template-suggestions-btn"
+        >
+          Show Suggestions
+        </Button>
+      </div>
+    )}
 
     {/* Tone Selector */}
     <div className="mt-4">

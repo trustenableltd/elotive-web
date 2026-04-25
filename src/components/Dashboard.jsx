@@ -803,9 +803,12 @@ export const Dashboard = () => {
   };
 
   const handleUserMessageEdit = (nextValue) => {
-    if (suppressTemplateSuggestions && nextValue?.trim()) {
-      setSuppressTemplateSuggestions(false);
-    }
+    // Keep suggestions suppressed while typing; user manually re-enables them.
+    void nextValue;
+  };
+
+  const enableTemplateSuggestions = () => {
+    setSuppressTemplateSuggestions(false);
   };
 
   const deleteTemplate = async (templateId) => {
@@ -1278,6 +1281,7 @@ export const Dashboard = () => {
               onApplyTemplate={applyTemplate}
               suppressTemplateSuggestions={suppressTemplateSuggestions}
               onUserMessageEdit={handleUserMessageEdit}
+              onEnableTemplateSuggestions={enableTemplateSuggestions}
               userInstruction={userInstruction}
               setUserInstruction={setUserInstruction}
             />
