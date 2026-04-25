@@ -45,6 +45,7 @@ export const CustomerMessageInput = ({
   suppressTemplateSuggestions = false,
   onUserMessageEdit,
   onEnableTemplateSuggestions,
+  hasTemplates = false,
   userInstruction, setUserInstruction
 }) => {
   const handlePaste = (e) => {
@@ -118,7 +119,7 @@ export const CustomerMessageInput = ({
       suppress={suppressTemplateSuggestions}
     />
 
-    {suppressTemplateSuggestions && customerMessage.trim() && (
+    {suppressTemplateSuggestions && hasTemplates && customerMessage.trim() && (
       <div className="mt-3">
         <Button
           variant="outline"

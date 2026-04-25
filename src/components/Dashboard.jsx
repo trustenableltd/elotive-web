@@ -1282,6 +1282,7 @@ export const Dashboard = () => {
               suppressTemplateSuggestions={suppressTemplateSuggestions}
               onUserMessageEdit={handleUserMessageEdit}
               onEnableTemplateSuggestions={enableTemplateSuggestions}
+              hasTemplates={templates.length > 0}
               userInstruction={userInstruction}
               setUserInstruction={setUserInstruction}
             />
