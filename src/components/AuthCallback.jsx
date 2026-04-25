@@ -28,15 +28,11 @@ export const AuthCallback = () => {
       }
 
       try {
-        // Fetch current user using session token as Bearer
-        const response = await axios.get(
-          `${API}/auth/me`,
-          { 
-            withCredentials: true,
-            headers: {
-              'Authorization': `Bearer ${sessionToken}`
-            }
-          }
+        // Exchange callback session_id for a cookie-backed session used by all API calls.
+        const response = await axios.post(
+          `${API}/auth/session`,
+          { session_id: sessionToken },
+          { withCredentials: true }
         );
 
         setAuthUser(response.data, response.data.type);
