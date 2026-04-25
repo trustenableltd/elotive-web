@@ -27,9 +27,14 @@ export const ConversationPanel = ({
             <p className="text-[11px] text-muted-foreground">
               {conversationMessages.length} message{conversationMessages.length !== 1 ? 's' : ''}
               {pinnedMessages.length > 0 && <> &middot; {pinnedMessages.length} pinned</>}
-              {threadTemplate?.name && <> &middot; Template: {threadTemplate.name}</>}
+              {threadTemplate?.name && <> &middot; Thread: {threadTemplate.name}</>}
               {' '}&middot; AI context active
             </p>
+            {threadTemplate?.instructions && (
+              <p className="text-[11px] text-primary/80 mt-0.5 line-clamp-1" title={threadTemplate.instructions}>
+                AI: {threadTemplate.instructions}
+              </p>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-1 shrink-0">

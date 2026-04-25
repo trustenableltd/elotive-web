@@ -75,6 +75,7 @@ export const Dashboard = () => {
   const [templateName, setTemplateName] = useState('');
   const [templateCategory, setTemplateCategory] = useState('general');
   const [templateMode, setTemplateMode] = useState('exact');
+  const [threadInstructions, setThreadInstructions] = useState('');
   const [messageToSave, setMessageToSave] = useState(null);
   const [activeTemplateContext, setActiveTemplateContext] = useState(null);
   const [suppressTemplateSuggestions, setSuppressTemplateSuggestions] = useState(false);
@@ -84,6 +85,7 @@ export const Dashboard = () => {
         id: activeConversation.thread_template_id,
         name: activeConversation.thread_template_name,
         mode: activeConversation.thread_template_mode,
+        instructions: activeConversation.thread_template_instructions || '',
       }
     : null;
   
@@ -710,12 +712,14 @@ export const Dashboard = () => {
       await axios.post(`${API}/messages/${messageToSave}/save-template`, {
         name: templateName.trim(),
         category: templateCategory,
-        mode: templateMode
+        mode: templateMode,
+        thread_instructions: threadInstructions.trim()
       }, { withCredentials: true });
       fetchTemplates();
       setSaveTemplateDialog(false);
       setTemplateName('');
       setTemplateMode('exact');
+      setThreadInstructions('');
       setMessageToSave(null);
       toast.success('Template saved successfully');
     } catch (error) {
@@ -1373,6 +1377,8 @@ export const Dashboard = () => {
         setTemplateCategory={setTemplateCategory}
         templateMode={templateMode}
         setTemplateMode={setTemplateMode}
+        threadInstructions={threadInstructions}
+        setThreadInstructions={setThreadInstructions}
         onSave={saveAsTemplate}
       />
 

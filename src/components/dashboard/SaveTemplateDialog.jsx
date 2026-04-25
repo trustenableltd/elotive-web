@@ -6,6 +6,7 @@ export const SaveTemplateDialog = ({
   open, onOpenChange, templateName, setTemplateName, 
   templateCategory, setTemplateCategory,
   templateMode, setTemplateMode,
+  threadInstructions, setThreadInstructions,
   onSave 
 }) => (
   <Dialog open={open} onOpenChange={onOpenChange}>
@@ -19,7 +20,7 @@ export const SaveTemplateDialog = ({
           <Input
             value={templateName}
             onChange={(e) => setTemplateName(e.target.value)}
-            placeholder="e.g., Moving Quote - 2 Bed"
+            placeholder="e.g., Nextdoor replies, Facebook posts, Email enquiries"
             data-testid="template-name-input"
           />
         </div>
@@ -49,6 +50,20 @@ export const SaveTemplateDialog = ({
             <option value="exact">Exact (reuse response as-is)</option>
             <option value="pattern">Pattern (same structure, rewrite to fit message)</option>
           </select>
+        </div>
+        <div>
+          <label className="text-sm font-medium mb-1 block">Thread Instructions <span className="text-muted-foreground font-normal">(optional)</span></label>
+          <p className="text-xs text-muted-foreground mb-2">
+            Describe what this thread handles and how the AI should reply. When you apply this template to a conversation thread, the AI will follow these instructions on every Generate — without you having to repeat context.
+          </p>
+          <textarea
+            value={threadInstructions}
+            onChange={(e) => setThreadInstructions(e.target.value)}
+            placeholder={"e.g., This thread handles Nextdoor van removal requests. Greet customers by their first name, reference the specific items they mentioned, give a realistic price range (£70–£150), mention availability today, and end with a clear call to action."}
+            className="w-full p-2 rounded-lg border bg-background text-sm resize-none"
+            rows={5}
+            data-testid="template-thread-instructions"
+          />
         </div>
       </div>
       <DialogFooter>

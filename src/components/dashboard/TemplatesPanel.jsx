@@ -72,6 +72,11 @@ export const TemplatesPanel = ({
                     ★ {tmpl.avg_rating.toFixed(1)}
                   </span>
                 )}
+                {tmpl.thread_instructions && (
+                  <span className="px-2 py-0.5 rounded text-xs bg-violet-50 text-violet-700 dark:bg-violet-950/50 dark:text-violet-300" title={tmpl.thread_instructions}>
+                    Thread AI
+                  </span>
+                )}
               </div>
 
               {/* Template enhancements */}
