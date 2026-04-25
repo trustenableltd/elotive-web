@@ -21,6 +21,14 @@ export const TemplateSuggestions = ({ customerMessage, onApply, suppress = false
   const [hint, setHint] = useState('');
   const [loading, setLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const normalizedMessage = customerMessage.trim();
+  const wordCount = normalizedMessage ? normalizedMessage.split(/\s+/).length : 0;
+  const lineCount = normalizedMessage ? normalizedMessage.split(/\n+/).filter(Boolean).length : 0;
+  const looksLikeDetailedInquiry = (
+    normalizedMessage.length >= 40 &&
+    wordCount >= 6 &&
+    (lineCount >= 2 || /[?.!,]/.test(normalizedMessage))
+  );
 
   const fetchSuggestions = useCallback(async () => {
     if (suppress) {
@@ -29,7 +37,7 @@ export const TemplateSuggestions = ({ customerMessage, onApply, suppress = false
       return;
     }
 
-    if (!customerMessage.trim() || customerMessage.trim().length < 5) {
+    if (!looksLikeDetailedInquiry) {
       setSuggestions([]);
       setShowSuggestions(false);
       return;
@@ -57,7 +65,7 @@ export const TemplateSuggestions = ({ customerMessage, onApply, suppress = false
     } finally {
       setLoading(false);
     }
-  }, [customerMessage, suppress]);
+  }, [customerMessage, looksLikeDetailedInquiry, suppress]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -67,7 +75,7 @@ export const TemplateSuggestions = ({ customerMessage, onApply, suppress = false
         return;
       }
 
-      if (customerMessage.trim().length >= 5) {
+      if (looksLikeDetailedInquiry) {
         fetchSuggestions();
       } else {
         setSuggestions([]);
@@ -76,7 +84,7 @@ export const TemplateSuggestions = ({ customerMessage, onApply, suppress = false
     }, 800);
 
     return () => clearTimeout(timer);
-  }, [customerMessage, fetchSuggestions, suppress]);
+  }, [customerMessage, fetchSuggestions, looksLikeDetailedInquiry, suppress]);
 
   if (suppress || !showSuggestions || suggestions.length === 0) {
     return null;

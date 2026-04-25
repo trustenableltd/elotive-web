@@ -753,7 +753,14 @@ export const Dashboard = () => {
         { thread_template_id: template.template_id },
         { withCredentials: true }
       );
-      setActiveConversation(response.data.conversation);
+      const updatedConversation = response.data.conversation;
+      setActiveConversation(updatedConversation);
+      setConversations((prev) => prev.map((conversation) => (
+        conversation.conversation_id === updatedConversation.conversation_id
+          ? { ...conversation, ...updatedConversation }
+          : conversation
+      )));
+      setCustomerMessage(template.customer_message || customerMessage);
       setActiveTemplateContext(null);
       setSuppressTemplateSuggestions(true);
       setTone(template.tone || tone);
@@ -773,7 +780,13 @@ export const Dashboard = () => {
         { clear_thread_template: true },
         { withCredentials: true }
       );
-      setActiveConversation(response.data.conversation);
+      const updatedConversation = response.data.conversation;
+      setActiveConversation(updatedConversation);
+      setConversations((prev) => prev.map((conversation) => (
+        conversation.conversation_id === updatedConversation.conversation_id
+          ? { ...conversation, ...updatedConversation }
+          : conversation
+      )));
       setActiveTemplateContext(null);
       setSuppressTemplateSuggestions(false);
       toast.success('Thread template cleared');
