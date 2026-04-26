@@ -154,6 +154,7 @@ export const BusinessProfileCard = ({
           />
           <p className="text-xs text-muted-foreground mt-1">Auto-filled from country. You can edit manually.</p>
         </div>
+        <Button 
           onClick={onSave}
           className="w-full bg-primary hover:bg-primary/90 rounded-lg"
           data-testid="save-profile-btn"
