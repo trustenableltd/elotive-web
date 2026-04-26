@@ -399,17 +399,6 @@ export const AIAgentPanel = ({ onBack }) => {
 
           <div className="flex items-center justify-between p-3 rounded-lg border bg-muted/30">
             <div>
-              <p className="text-sm font-medium">First message: ask "here or WhatsApp"</p>
-              <p className="text-xs text-muted-foreground">Use a clear CTA asking where to share price and availability.</p>
-            </div>
-            <Switch
-              checked={settings.rule_first_message_price_channel_prompt ?? true}
-              onCheckedChange={v => update('rule_first_message_price_channel_prompt', v)}
-            />
-          </div>
-
-          <div className="flex items-center justify-between p-3 rounded-lg border bg-muted/30">
-            <div>
               <p className="text-sm font-medium">Use customer first name</p>
               <p className="text-xs text-muted-foreground">Personalize replies with first name when available.</p>
             </div>
