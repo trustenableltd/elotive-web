@@ -1,9 +1,8 @@
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from './ui/button';
-import { Zap, MessageSquare, Clock, Sparkles, ArrowRight, PlayCircle } from 'lucide-react';
+import { Zap, MessageSquare, Sparkles, ArrowRight, PlayCircle } from 'lucide-react';
 import { EmailAuthDialog } from './EmailAuthDialog';
 import { ElotiveLogoMark } from './BrandLogo';
 
@@ -11,12 +10,13 @@ export const Landing = () => {
   const { login, showEmailDialog, setShowEmailDialog, emailLoading, emailError, handleEmailAuth } = useAuth();
   const [videoUnavailable, setVideoUnavailable] = useState(false);
   const demoVideoUrl = process.env.REACT_APP_DEMO_VIDEO_URL || '/elotive-overview.mp4';
+  const demoPosterUrl = process.env.REACT_APP_DEMO_POSTER_URL || '/elotive-overview-poster.svg';
   // const [isGuestLoading, setIsGuestLoading] = useState(false);
 
 
 
   return (
-    <div className="min-h-screen hero-gradient">
+    <div className="min-h-screen hero-gradient overflow-x-hidden">
       {/* Header */}
       <header className="px-4 sm:px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
@@ -47,22 +47,22 @@ export const Landing = () => {
       {/* Hero Section */}
       <main className="px-4 sm:px-6 py-8 md:py-24">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="grid xl:grid-cols-2 gap-10 xl:gap-12 items-center">
             {/* Left Content */}
-            <div className="space-y-6 md:space-y-8">
+            <div className="space-y-6 md:space-y-8 max-w-2xl">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
                 <Sparkles className="w-4 h-4" />
                 AI Agent For Service Businesses
               </div>
               
-              <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-['Outfit'] tracking-tight leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-['Outfit'] tracking-tight leading-[1.1]">
                 Turn enquiries into{' '}
-                <span className="text-primary">booked jobs automatically</span>
+                <span className="text-primary">booked jobs faster</span>
               </h1>
               
               <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-lg">
-                Elotive AI replies instantly, provides accurate quotes, and follows up automatically
-                so you convert more leads into confirmed bookings.
+                Elotive AI helps you draft instant replies for free. Upgrade for automated quotes
+                and follow-ups so more leads become confirmed bookings.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
@@ -70,7 +70,7 @@ export const Landing = () => {
                   size="lg"
                   onClick={() => login('google')}
                   data-testid="get-started-btn"
-                  className="bg-primary hover:bg-primary/90 text-white rounded-full px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg btn-press"
+                  className="bg-primary hover:bg-primary/90 text-white rounded-full px-6 sm:px-8 min-h-[44px] sm:min-h-[48px] text-base sm:text-lg btn-press"
                 >
                   Start Free
                   <ArrowRight className="w-5 h-5 ml-2" />
@@ -79,7 +79,7 @@ export const Landing = () => {
                   size="lg"
                   onClick={() => setShowEmailDialog(true)}
                   variant="outline"
-                  className="rounded-full px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg btn-press"
+                  className="rounded-full px-6 sm:px-8 min-h-[44px] sm:min-h-[48px] text-base sm:text-lg btn-press"
                 >
                   Email Login
                 </Button>
@@ -92,59 +92,85 @@ export const Landing = () => {
         error={emailError}
       />
 
-              {/* Features */}
-              <div className="grid sm:grid-cols-3 gap-6 pt-8">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
-                    <MessageSquare className="w-5 h-5 text-emerald-600" />
+              {/* Free vs Premium */}
+              <div className="pt-8 space-y-4">
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="rounded-xl border bg-card/50 p-4 h-full sm:min-h-[180px]">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-8 h-8 rounded-md bg-emerald-100 flex items-center justify-center shrink-0">
+                        <MessageSquare className="w-4 h-4 text-emerald-600" />
+                      </div>
+                      <h3 className="font-semibold font-['Outfit']">Free</h3>
+                    </div>
+                    <ul className="space-y-1.5 text-sm text-muted-foreground list-disc pl-5 marker:text-muted-foreground/80">
+                      <li>AI reply drafting from pasted enquiries</li>
+                      <li>Tone controls</li>
+                      <li>Manual send</li>
+                    </ul>
                   </div>
-                  <div>
-                    <h3 className="font-semibold font-['Outfit']">Instant Replies</h3>
-                    <p className="text-sm text-muted-foreground">Respond to every enquiry in minutes</p>
+
+                  <div className="rounded-xl border bg-card/50 p-4 h-full sm:min-h-[180px]">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-8 h-8 rounded-md bg-indigo-100 flex items-center justify-center shrink-0">
+                        <Zap className="w-4 h-4 text-indigo-600" />
+                      </div>
+                      <h3 className="font-semibold font-['Outfit']">Premium</h3>
+                    </div>
+                    <ul className="space-y-1.5 text-sm text-muted-foreground list-disc pl-5 marker:text-muted-foreground/80">
+                      <li>Automated quotes</li>
+                      <li>Automatic follow-ups</li>
+                      <li>Multi-channel inbox</li>
+                      <li>Team collaboration</li>
+                    </ul>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center shrink-0">
-                    <Zap className="w-5 h-5 text-indigo-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold font-['Outfit']">Accurate Quotes</h3>
-                    <p className="text-sm text-muted-foreground">Consistent pricing based on your rules</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center shrink-0">
-                    <Clock className="w-5 h-5 text-rose-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold font-['Outfit']">Automatic Follow-Up</h3>
-                    <p className="text-sm text-muted-foreground">Keep leads warm until they book</p>
-                  </div>
-                </div>
+
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  Free = draft replies with manual send. Premium = automated workflows.
+                </p>
+                <a
+                  href="#pricing"
+                  className="inline-flex text-sm font-medium text-primary hover:text-primary/80"
+                >
+                  See full Pro and Business plan details
+                </a>
               </div>
             </div>
 
             {/* Right Content - Preview */}
-            <div className="relative">
+            <div className="relative w-full max-w-xl mx-auto xl:mx-0">
               <div className="glass rounded-2xl p-6 card-shadow mb-5">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
                   <PlayCircle className="w-4 h-4" />
                   How Elotive Works (36 sec)
                 </div>
                 {!videoUnavailable ? (
-                  <video
-                    className="w-full rounded-xl border border-primary/20 bg-black/80"
-                    controls
-                    preload="metadata"
-                    onError={() => setVideoUnavailable(true)}
-                  >
-                    <source src={demoVideoUrl} type="video/mp4" />
-                    Your browser does not support embedded videos.
-                  </video>
+                  <div className="relative rounded-xl overflow-hidden border border-primary/25 bg-slate-950">
+                    <video
+                      className="w-full bg-slate-950"
+                      controls
+                      preload="metadata"
+                      poster={demoPosterUrl}
+                      onError={() => setVideoUnavailable(true)}
+                      onAbort={() => setVideoUnavailable(true)}
+                      onStalled={() => setVideoUnavailable(true)}
+                      onEmptied={() => setVideoUnavailable(true)}
+                    >
+                      <source src={demoVideoUrl} type="video/mp4" />
+                    </video>
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-emerald-400/10" />
+                  </div>
                 ) : (
-                  <div className="rounded-xl border border-dashed border-primary/30 bg-primary/5 p-5 text-sm text-muted-foreground">
-                    Add your demo clip at <strong>/frontend/public/elotive-overview.mp4</strong>
-                    or set <strong>REACT_APP_DEMO_VIDEO_URL</strong> to a hosted MP4 URL.
+                  <div className="rounded-xl border border-primary/25 bg-gradient-to-br from-primary/10 via-background to-emerald-400/10 p-5 text-sm text-muted-foreground">
+                    <div className="rounded-lg border border-primary/20 bg-card/70 p-4 space-y-2">
+                      <p className="text-foreground font-medium">Demo video unavailable locally</p>
+                      <p>
+                        Add your demo clip at <strong>/frontend/public/elotive-overview.mp4</strong>
+                      </p>
+                      <p>
+                        Or set <strong>REACT_APP_DEMO_VIDEO_URL</strong> to a hosted MP4 URL.
+                      </p>
+                    </div>
                   </div>
                 )}
               </div>
@@ -184,6 +210,68 @@ export const Landing = () => {
               <div className="absolute -z-10 -bottom-8 -left-8 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl" />
             </div>
           </div>
+
+          <section id="pricing" className="mt-20 border-t border-border/60 pt-12">
+            <div className="max-w-3xl space-y-3 mb-8">
+              <p className="text-sm font-medium uppercase tracking-[0.18em] text-primary/80">Pricing</p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-['Outfit'] tracking-tight">
+                Choose the plan that fits your workflow
+              </h2>
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+                Start free with AI-drafted replies. Upgrade when you want quotes, follow-ups, and team workflows to run at scale.
+              </p>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-6">
+              <div className="rounded-2xl border bg-card/70 p-6 card-shadow space-y-6">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-4">
+                    <h3 className="text-xl font-semibold font-['Outfit']">Pro</h3>
+                    <span className="text-sm font-medium text-primary">Most teams start here</span>
+                  </div>
+                  <div className="flex items-end gap-2">
+                    <span className="text-4xl font-bold font-['Outfit']">$29</span>
+                    <span className="text-muted-foreground pb-1">/mo</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">Unlimited AI-handled enquiries · 3 team seats</p>
+                </div>
+
+                <ul className="space-y-2 text-sm text-muted-foreground list-disc pl-5 marker:text-primary/70">
+                  <li>Everything in Free</li>
+                  <li>Unlimited AI handling</li>
+                  <li>3 team seats</li>
+                  <li>PDF export</li>
+                  <li>AI coaching</li>
+                  <li>Analytics dashboard</li>
+                  <li>Webhook automations</li>
+                  <li>Multi-channel inbox</li>
+                  <li>Workflow management</li>
+                </ul>
+              </div>
+
+              <div className="rounded-2xl border border-primary/30 bg-primary/[0.04] p-6 card-shadow space-y-6">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-4">
+                    <h3 className="text-xl font-semibold font-['Outfit']">Business</h3>
+                    <span className="text-sm font-medium text-primary">For larger teams</span>
+                  </div>
+                  <div className="flex items-end gap-2">
+                    <span className="text-4xl font-bold font-['Outfit']">$79</span>
+                    <span className="text-muted-foreground pb-1">/mo</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">Unlimited AI-handled enquiries · 10 team seats</p>
+                </div>
+
+                <ul className="space-y-2 text-sm text-muted-foreground list-disc pl-5 marker:text-primary/70">
+                  <li>Everything in Pro</li>
+                  <li>10 team seats</li>
+                  <li>Team collaboration</li>
+                  <li>Priority support</li>
+                  <li>Advanced analytics</li>
+                </ul>
+              </div>
+            </div>
+          </section>
         </div>
       </main>
     </div>

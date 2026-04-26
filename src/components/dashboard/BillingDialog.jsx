@@ -65,7 +65,7 @@ export const BillingDialog = ({ open, onOpenChange, subscription, onCheckout, on
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[calc(100vw-1rem)] sm:max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CreditCard className="w-5 h-5" />
@@ -75,7 +75,7 @@ export const BillingDialog = ({ open, onOpenChange, subscription, onCheckout, on
 
         {/* Current Usage */}
         <div className="rounded-lg border p-4 mb-4">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-2">
             <div className="flex items-center gap-2">
               <PlanIcon plan={currentPlan} />
               <span className="font-medium capitalize">{currentPlan} Plan</span>

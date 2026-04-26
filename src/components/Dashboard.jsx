@@ -79,7 +79,7 @@ export const Dashboard = () => {
   const [threadInstructions, setThreadInstructions] = useState('');
   const [messageToSave, setMessageToSave] = useState(null);
   const [activeTemplateContext, setActiveTemplateContext] = useState(null);
-  const [suppressTemplateSuggestions, setSuppressTemplateSuggestions] = useState(false);
+  const [suppressTemplateSuggestions, setSuppressTemplateSuggestions] = useState(true);
 
   const activeThreadTemplate = activeConversation?.thread_template_id
     ? {
@@ -581,12 +581,13 @@ export const Dashboard = () => {
     setCurrentRating(0);
     setChatSearch('');
     setShowChatSearch(false);
-    setSuppressTemplateSuggestions(false);
+    setSuppressTemplateSuggestions(true);
   };
 
   const loadConversation = async (conversation) => {
     setActiveConversation(conversation);
     setCustomerName(conversation.customer_name || '');
+    setSuppressTemplateSuggestions(true);
     setChatExpanded(true);
     setChatSearch('');
     setShowChatSearch(false);
@@ -795,7 +796,7 @@ export const Dashboard = () => {
           : conversation
       )));
       setActiveTemplateContext(null);
-      setSuppressTemplateSuggestions(false);
+      setSuppressTemplateSuggestions(true);
       toast.success('Thread template cleared');
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Failed to clear thread template');
@@ -803,8 +804,10 @@ export const Dashboard = () => {
   };
 
   const handleUserMessageEdit = (nextValue) => {
-    // Keep suggestions suppressed while typing; user manually re-enables them.
-    void nextValue;
+    // Manual mode: any user edit re-suppresses suggestions until explicitly requested.
+    if (!suppressTemplateSuggestions && nextValue !== undefined) {
+      setSuppressTemplateSuggestions(true);
+    }
   };
 
   const enableTemplateSuggestions = () => {

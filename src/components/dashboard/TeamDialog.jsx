@@ -54,7 +54,7 @@ export const TeamDialog = ({ open, onOpenChange, authType, team, inviteEmail, se
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="w-[calc(100vw-1rem)] sm:max-w-lg max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Users className="w-5 h-5" />
@@ -207,7 +207,7 @@ export const TeamDialog = ({ open, onOpenChange, authType, team, inviteEmail, se
               {team.is_owner && (
                 <div>
                   <h4 className="font-medium mb-3 text-sm">Invite Member</h4>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Input
                       value={inviteEmail}
                       onChange={(e) => setInviteEmail(e.target.value)}
@@ -215,7 +215,7 @@ export const TeamDialog = ({ open, onOpenChange, authType, team, inviteEmail, se
                       type="email"
                       onKeyDown={(e) => e.key === 'Enter' && onInvite()}
                     />
-                    <Button onClick={onInvite} className="shrink-0">
+                    <Button onClick={onInvite} className="w-full sm:w-auto shrink-0">
                       <UserPlus className="w-4 h-4 mr-2" />
                       Invite
                     </Button>

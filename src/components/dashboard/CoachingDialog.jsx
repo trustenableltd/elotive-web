@@ -3,7 +3,7 @@ import { Lightbulb, Check, Loader2, FileText, Zap } from 'lucide-react';
 
 export const CoachingDialog = ({ open, onOpenChange, coaching, isLoading }) => (
   <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+    <DialogContent className="w-[calc(100vw-1rem)] sm:max-w-2xl max-h-[80vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle className="flex items-center gap-2">
           <Lightbulb className="w-5 h-5 text-amber-500" />

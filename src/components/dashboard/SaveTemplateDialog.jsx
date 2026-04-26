@@ -10,7 +10,7 @@ export const SaveTemplateDialog = ({
   onSave 
 }) => (
   <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent>
+    <DialogContent className="w-[calc(100vw-1rem)] sm:max-w-lg max-h-[85vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle>Save as Template</DialogTitle>
       </DialogHeader>
@@ -66,9 +66,9 @@ export const SaveTemplateDialog = ({
           />
         </div>
       </div>
-      <DialogFooter>
-        <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-        <Button onClick={onSave} data-testid="confirm-save-template-btn">Save Template</Button>
+      <DialogFooter className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+        <Button variant="outline" onClick={() => onOpenChange(false)} className="w-full sm:w-auto">Cancel</Button>
+        <Button onClick={onSave} data-testid="confirm-save-template-btn" className="w-full sm:w-auto">Save Template</Button>
       </DialogFooter>
     </DialogContent>
   </Dialog>

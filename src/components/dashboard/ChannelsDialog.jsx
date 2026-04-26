@@ -293,7 +293,7 @@ export const ChannelsDialog = ({ open, onOpenChange, channels, onCreateChannel, 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[85vh]">
+      <DialogContent className="w-[calc(100vw-1rem)] sm:max-w-2xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Inbox className="w-5 h-5" />
@@ -332,7 +332,7 @@ export const ChannelsDialog = ({ open, onOpenChange, channels, onCreateChannel, 
                 <p className="text-sm font-medium">Connect a new channel</p>
                 
                 {/* Channel type selector */}
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {CHANNEL_TYPES.map(ct => {
                     const Icon = ct.icon;
                     return (
@@ -456,7 +456,7 @@ export const ChannelsDialog = ({ open, onOpenChange, channels, onCreateChannel, 
                   </div>
                 )}
 
-                <div className="flex gap-2 justify-end">
+                <div className="flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
                   <Button variant="ghost" size="sm" onClick={() => { setShowCreate(false); setNewChannel({ type: 'email', name: '', config: {} }); }}>Cancel</Button>
                   <Button size="sm" onClick={handleCreate}>Connect Channel</Button>
                 </div>

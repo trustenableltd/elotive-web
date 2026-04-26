@@ -127,7 +127,7 @@ export const WebhooksDialog = ({ open, onOpenChange, webhooks, newWebhook, setNe
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
+      <DialogContent className="w-[calc(100vw-1rem)] sm:max-w-lg max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Webhook className="w-5 h-5" />
@@ -136,7 +136,7 @@ export const WebhooksDialog = ({ open, onOpenChange, webhooks, newWebhook, setNe
         </DialogHeader>
         <div className="space-y-4 py-2">
           {/* Summary */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-muted-foreground">
               {webhooks.length} webhook{webhooks.length !== 1 ? 's' : ''} configured
               {webhooks.length > 0 && ` · ${webhooks.filter(w => w.is_active !== false).length} active`}

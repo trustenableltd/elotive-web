@@ -4,7 +4,7 @@ import { Star, BarChart3, Loader2 } from 'lucide-react';
 
 export const AnalyticsDialog = ({ open, onOpenChange, analytics }) => (
   <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent className="max-w-lg">
+    <DialogContent className="w-[calc(100vw-1rem)] sm:max-w-lg max-h-[85vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle className="flex items-center gap-2">
           <BarChart3 className="w-5 h-5" />

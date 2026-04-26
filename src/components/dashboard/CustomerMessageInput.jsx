@@ -72,6 +72,7 @@ export const CustomerMessageInput = ({
         size="sm"
         onClick={() => setShowTemplates(!showTemplates)}
         data-testid="templates-btn"
+        className="min-h-[44px] px-3 sm:min-h-[36px]"
       >
         <Bookmark className="w-4 h-4 mr-2" />
         Templates
@@ -106,7 +107,7 @@ export const CustomerMessageInput = ({
       <Input
         value={userInstruction || ''}
         onChange={(e) => setUserInstruction?.(e.target.value)}
-        placeholder="Coach the AI (optional) — e.g., ask for postcode and stairs, be more urgent, mention availability today"
+        placeholder="Coach the AI (optional) — add priorities or constraints to shape the reply (tone, urgency, details to ask, next step)"
         className="text-sm"
         data-testid="user-instruction-input"
       />
@@ -126,10 +127,17 @@ export const CustomerMessageInput = ({
           size="sm"
           onClick={onEnableTemplateSuggestions}
           data-testid="show-template-suggestions-btn"
+          className="min-h-[44px] px-3 sm:min-h-[36px]"
         >
           Show Suggestions
         </Button>
       </div>
+    )}
+
+    {suppressTemplateSuggestions && !hasTemplates && customerMessage.trim() && (
+      <p className="mt-3 text-sm text-muted-foreground" data-testid="template-suggestions-empty-hint">
+        No saved templates yet. Click Templates to save one, then suggestions will appear here.
+      </p>
     )}
 
     {/* Tone Selector */}
@@ -141,7 +149,7 @@ export const CustomerMessageInput = ({
             key={t.id}
             onClick={() => setTone(t.id)}
             data-testid={`tone-selector-${t.id}`}
-            className={`tone-btn px-4 py-2 rounded-lg text-sm font-medium border ${
+            className={`tone-btn min-h-[44px] px-4 py-2.5 rounded-lg text-sm font-medium border ${
               tone === t.id 
                 ? `active-${t.id}` 
                 : 'bg-card text-muted-foreground border-border hover:bg-muted/50'
