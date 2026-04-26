@@ -47,9 +47,9 @@ export const Landing = () => {
       {/* Hero Section */}
       <main className="px-4 sm:px-6 py-8 md:py-24">
         <div className="max-w-7xl mx-auto">
-          <div className="grid xl:grid-cols-2 gap-10 xl:gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
             {/* Left Content */}
-            <div className="space-y-6 md:space-y-8 max-w-2xl">
+            <div className="space-y-6 md:space-y-8 max-w-2xl lg:max-w-none">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
                 <Sparkles className="w-4 h-4" />
                 AI Agent For Service Businesses
@@ -138,7 +138,7 @@ export const Landing = () => {
             </div>
 
             {/* Right Content - Preview */}
-            <div className="relative w-full max-w-xl mx-auto xl:mx-0">
+            <div className="relative w-full max-w-xl lg:max-w-none mx-auto lg:mx-0">
               <div className="glass rounded-2xl p-6 card-shadow mb-5">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
                   <PlayCircle className="w-4 h-4" />
