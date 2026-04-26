@@ -58,7 +58,9 @@ export const Dashboard = () => {
     business_info: '',
     default_tone: 'friendly',
     contact_info: '',
-    response_signature: ''
+    response_signature: '',
+    country: '',
+    currency: ''
   });
   const [activeTab, setActiveTab] = useState('generate');
   
@@ -184,7 +186,9 @@ export const Dashboard = () => {
           business_info: active.business_info || '',
           default_tone: active.default_tone || 'friendly',
           contact_info: active.contact_info || '',
-          response_signature: active.response_signature || ''
+          response_signature: active.response_signature || '',
+          country: active.country || '',
+          currency: active.currency || ''
         });
         setTone(active.default_tone || 'friendly');
       }
@@ -419,7 +423,9 @@ export const Dashboard = () => {
         business_info: profile.business_info || '',
         default_tone: profile.default_tone || 'friendly',
         contact_info: profile.contact_info || '',
-        response_signature: profile.response_signature || ''
+        response_signature: profile.response_signature || '',
+        country: profile.country || '',
+        currency: profile.currency || ''
       });
       setTone(profile.default_tone || 'friendly');
       fetchMessages();
@@ -1133,7 +1139,7 @@ export const Dashboard = () => {
         onCreateProfile={() => {
           setIsCreatingProfile(true);
           setIsEditingProfile(true);
-          setProfileForm({ business_name: '', business_info: '', default_tone: 'friendly', contact_info: '', response_signature: '' });
+          setProfileForm({ business_name: '', business_info: '', default_tone: 'friendly', contact_info: '', response_signature: '', country: '', currency: '' });
         }}
         onExport={exportMessages}
         onShowCoaching={() => { setShowCoaching(true); fetchCoaching(); }}

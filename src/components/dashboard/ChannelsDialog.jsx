@@ -89,7 +89,7 @@ const ChannelCard = ({ channel, onDelete, onToggle, onTestConnection }) => {
   const webhookPath = channel.webhook_url || `/api/channels/inbound/${channel.channel_id}`;
   const webhookUrl = webhookPath.startsWith('http') ? webhookPath : `${baseUrl}${webhookPath}`;
   const widgetScript = channel.type === 'web'
-    ? `<script>\n(function() {\n  fetch("${baseUrl}/widget/${channel.channel_id}.js", {\n    headers: { "ngrok-skip-browser-warning": "true" }\n  })\n  .then(function(r) { return r.text(); })\n  .then(function(js) {\n    var s = document.createElement("script");\n    s.textContent = js;\n    document.body.appendChild(s);\n  })\n  .catch(function(e) { console.error("Widget load error:", e); });\n})();\n</script>`
+    ? `<script src="${baseUrl}/widget/${channel.channel_id}.js" defer></script>`
     : null;
 
   const copyText = (text, label) => {

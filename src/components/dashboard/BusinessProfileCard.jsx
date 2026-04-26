@@ -3,6 +3,60 @@ import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { User, Trash2 } from 'lucide-react';
 
+export const COUNTRIES = [
+  { name: 'United Kingdom', flag: '🇬🇧', currency: 'GBP (£)' },
+  { name: 'United States', flag: '🇺🇸', currency: 'USD ($)' },
+  { name: 'Canada', flag: '🇨🇦', currency: 'CAD ($)' },
+  { name: 'Australia', flag: '🇦🇺', currency: 'AUD ($)' },
+  { name: 'New Zealand', flag: '🇳🇿', currency: 'NZD ($)' },
+  { name: 'South Africa', flag: '🇿🇦', currency: 'ZAR (R)' },
+  { name: 'Nigeria', flag: '🇳🇬', currency: 'NGN (₦)' },
+  { name: 'Ghana', flag: '🇬🇭', currency: 'GHS (₵)' },
+  { name: 'Kenya', flag: '🇰🇪', currency: 'KES (KSh)' },
+  { name: 'India', flag: '🇮🇳', currency: 'INR (₹)' },
+  { name: 'Pakistan', flag: '🇵🇰', currency: 'PKR (₨)' },
+  { name: 'Bangladesh', flag: '🇧🇩', currency: 'BDT (৳)' },
+  { name: 'United Arab Emirates', flag: '🇦🇪', currency: 'AED (د.إ)' },
+  { name: 'Saudi Arabia', flag: '🇸🇦', currency: 'SAR (﷼)' },
+  { name: 'Qatar', flag: '🇶🇦', currency: 'QAR (﷼)' },
+  { name: 'Singapore', flag: '🇸🇬', currency: 'SGD ($)' },
+  { name: 'Malaysia', flag: '🇲🇾', currency: 'MYR (RM)' },
+  { name: 'Philippines', flag: '🇵🇭', currency: 'PHP (₱)' },
+  { name: 'Germany', flag: '🇩🇪', currency: 'EUR (€)' },
+  { name: 'France', flag: '🇫🇷', currency: 'EUR (€)' },
+  { name: 'Netherlands', flag: '🇳🇱', currency: 'EUR (€)' },
+  { name: 'Spain', flag: '🇪🇸', currency: 'EUR (€)' },
+  { name: 'Italy', flag: '🇮🇹', currency: 'EUR (€)' },
+  { name: 'Ireland', flag: '🇮🇪', currency: 'EUR (€)' },
+  { name: 'Portugal', flag: '🇵🇹', currency: 'EUR (€)' },
+  { name: 'Poland', flag: '🇵🇱', currency: 'PLN (zł)' },
+  { name: 'Sweden', flag: '🇸🇪', currency: 'SEK (kr)' },
+  { name: 'Norway', flag: '🇳🇴', currency: 'NOK (kr)' },
+  { name: 'Denmark', flag: '🇩🇰', currency: 'DKK (kr)' },
+  { name: 'Switzerland', flag: '🇨🇭', currency: 'CHF (CHF)' },
+  { name: 'Brazil', flag: '🇧🇷', currency: 'BRL (R$)' },
+  { name: 'Mexico', flag: '🇲🇽', currency: 'MXN ($)' },
+  { name: 'Argentina', flag: '🇦🇷', currency: 'ARS ($)' },
+  { name: 'Colombia', flag: '🇨🇴', currency: 'COP ($)' },
+  { name: 'Chile', flag: '🇨🇱', currency: 'CLP ($)' },
+  { name: 'Jamaica', flag: '🇯🇲', currency: 'JMD ($)' },
+  { name: 'Trinidad & Tobago', flag: '🇹🇹', currency: 'TTD ($)' },
+  { name: 'China', flag: '🇨🇳', currency: 'CNY (¥)' },
+  { name: 'Japan', flag: '🇯🇵', currency: 'JPY (¥)' },
+  { name: 'South Korea', flag: '🇰🇷', currency: 'KRW (₩)' },
+  { name: 'Indonesia', flag: '🇮🇩', currency: 'IDR (Rp)' },
+  { name: 'Vietnam', flag: '🇻🇳', currency: 'VND (₫)' },
+  { name: 'Thailand', flag: '🇹🇭', currency: 'THB (฿)' },
+  { name: 'Egypt', flag: '🇪🇬', currency: 'EGP (E£)' },
+  { name: 'Morocco', flag: '🇲🇦', currency: 'MAD (MAD)' },
+  { name: 'Ethiopia', flag: '🇪🇹', currency: 'ETB (Br)' },
+  { name: 'Tanzania', flag: '🇹🇿', currency: 'TZS (TSh)' },
+  { name: 'Uganda', flag: '🇺🇬', currency: 'UGX (USh)' },
+  { name: 'Zimbabwe', flag: '🇿🇼', currency: 'USD ($)' },
+  { name: 'Zambia', flag: '🇿🇲', currency: 'ZMW (ZK)' },
+  { name: 'Other', flag: '🌍', currency: '' },
+];
+
 export const BusinessProfileCard = ({
   activeTab, activeProfile, isEditingProfile, setIsEditingProfile,
   isCreatingProfile, setIsCreatingProfile, profileForm, setProfileForm,
@@ -69,7 +123,37 @@ export const BusinessProfileCard = ({
             data-testid="signature-input"
           />
         </div>
-        <Button 
+        <div>
+          <label className="text-sm text-muted-foreground mb-1 block">Country</label>
+          <select
+            value={profileForm.country}
+            onChange={(e) => {
+              const selected = COUNTRIES.find(c => c.name === e.target.value);
+              setProfileForm({
+                ...profileForm,
+                country: e.target.value,
+                currency: selected?.currency || profileForm.currency
+              });
+            }}
+            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            data-testid="country-select"
+          >
+            <option value="">Select country…</option>
+            {COUNTRIES.map(c => (
+              <option key={c.name} value={c.name}>{c.flag} {c.name}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="text-sm text-muted-foreground mb-1 block">Currency</label>
+          <Input
+            value={profileForm.currency}
+            onChange={(e) => setProfileForm({ ...profileForm, currency: e.target.value })}
+            placeholder="e.g. GBP (£)"
+            data-testid="currency-input"
+          />
+          <p className="text-xs text-muted-foreground mt-1">Auto-filled from country. You can edit manually.</p>
+        </div>
           onClick={onSave}
           className="w-full bg-primary hover:bg-primary/90 rounded-lg"
           data-testid="save-profile-btn"
@@ -104,6 +188,20 @@ export const BusinessProfileCard = ({
               <div>
                 <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Contact</p>
                 <p className="text-sm">{activeProfile.contact_info}</p>
+              </div>
+            )}
+            {activeProfile.country && (
+              <div>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Country</p>
+                <p className="text-sm">
+                  {(COUNTRIES.find(c => c.name === activeProfile.country)?.flag || '🌍')} {activeProfile.country}
+                </p>
+              </div>
+            )}
+            {activeProfile.currency && (
+              <div>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Currency</p>
+                <p className="text-sm">{activeProfile.currency}</p>
               </div>
             )}
           </>
