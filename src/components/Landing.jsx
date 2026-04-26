@@ -152,9 +152,7 @@ export const Landing = () => {
                       preload="metadata"
                       poster={demoPosterUrl}
                       onError={() => setVideoUnavailable(true)}
-                      onAbort={() => setVideoUnavailable(true)}
-                      onStalled={() => setVideoUnavailable(true)}
-                      onEmptied={() => setVideoUnavailable(true)}
+                      onLoadedData={() => setVideoUnavailable(false)}
                     >
                       <source src={demoVideoUrl} type="video/mp4" />
                     </video>
